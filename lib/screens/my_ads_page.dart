@@ -58,12 +58,15 @@ class _MyAdsPageState extends State<MyAdsPage> {
           final ads = snapshot.data!;
 
           return ListView.builder(
-            padding: const EdgeInsets.only(bottom: 80), // Espaço para o botão flutuante não cobrir o último item
+            padding: const EdgeInsets.only(
+                bottom:
+                    80), // Espaço para o botão flutuante não cobrir o último item
             itemCount: ads.length,
             itemBuilder: (context, index) {
               final ad = ads[index];
               return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: ListTile(
                   leading: Image.network(
                     ad['imagem_url'] ?? 'https://via.placeholder.com/100',
@@ -71,16 +74,20 @@ class _MyAdsPageState extends State<MyAdsPage> {
                     height: 80,
                     fit: BoxFit.cover,
                   ),
-                  title: Text(ad['titulo'], style: const TextStyle(fontWeight: FontWeight.bold)),
+                  title: Text(ad['titulo'],
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text(
                     'Status: ${ad['status']}',
                     style: TextStyle(
-                      color: ad['status'] == 'disponivel' ? Colors.green : Colors.orange,
+                      color: ad['status'] == 'disponivel'
+                          ? Colors.green
+                          : Colors.orange,
                     ),
                   ),
                   trailing: Text(
                     'R\$ ${ad['preco_sugerido']}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
               );
@@ -94,7 +101,7 @@ class _MyAdsPageState extends State<MyAdsPage> {
             context,
             MaterialPageRoute(builder: (context) => const CreateAdPage()),
           );
-          
+
           if (result == true && mounted && _userIdNullable != null) {
             setState(() {
               // Recarrega a lista de anúncios

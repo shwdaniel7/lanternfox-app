@@ -55,22 +55,29 @@ class _AdDetailPageState extends State<AdDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.network(ad['imagem_url'] ?? 'https://via.placeholder.com/400'),
+                  Image.network(
+                      ad['imagem_url'] ?? 'https://via.placeholder.com/400'),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(ad['titulo'], style: Theme.of(context).textTheme.headlineSmall),
+                        Text(ad['titulo'],
+                            style: Theme.of(context).textTheme.headlineSmall),
                         const SizedBox(height: 16),
                         Text(
                           'R\$ ${ad['preco_sugerido']}',
-                          style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 16),
-                        Text('Vendido por: ${seller?['full_name'] ?? 'Usuário'}'),
+                        Text(
+                            'Vendido por: ${seller?['full_name'] ?? 'Usuário'}'),
                         const SizedBox(height: 24),
-                        const Text('Sobre o produto', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('Sobre o produto',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         const Divider(),
                         Text(ad['descricao'] ?? 'Sem descrição disponível.'),
                         const SizedBox(height: 32),
@@ -78,17 +85,19 @@ class _AdDetailPageState extends State<AdDetailPage> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              Provider.of<CartManager>(context, listen: false).addItem(ad, type: 'marketplace');
+                              Provider.of<CartManager>(context, listen: false)
+                                  .addItem(ad, type: 'marketplace');
 
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('${ad['titulo']} adicionado ao carrinho!'),
+                                  content: Text(
+                                      '${ad['titulo']} adicionado ao carrinho!'),
                                   backgroundColor: Colors.green,
                                 ),
                               );
                             },
                             child: const Text('Comprar'),
-                        ),
+                          ),
                         ),
                       ],
                     ),

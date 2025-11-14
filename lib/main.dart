@@ -7,7 +7,8 @@ import 'screens/auth_page.dart';
 import 'screens/home_page.dart';
 
 const String supabaseUrl = 'https://yijgjxbznkanpsytcpjl.supabase.co';
-const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpamdqeGJ6bmthbnBzeXRjcGpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwODM1OTIsImV4cCI6MjA3NDY1OTU5Mn0.2H2nOwA3H45Cg9rwtbZ32MgMaMuKIH2P8Qqol--rbJg';
+const String supabaseAnonKey =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpamdqeGJ6bmthbnBzeXRjcGpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwODM1OTIsImV4cCI6MjA3NDY1OTU5Mn0.2H2nOwA3H45Cg9rwtbZ32MgMaMuKIH2P8Qqol--rbJg';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,11 +50,10 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
-          titleTextStyle: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          titleTextStyle:
+              textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         textTheme: textTheme,
-        
-        
         cardTheme: CardThemeData(
           color: const Color(0xFF1E1E1E),
           elevation: 4,
@@ -61,14 +61,15 @@ class MyApp extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFf39c12),
             foregroundColor: Colors.black,
-            textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            textStyle:
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
@@ -76,7 +77,8 @@ class MyApp extends StatelessWidget {
             foregroundColor: const Color(0xFFf39c12),
             side: const BorderSide(color: Color(0xFFf39c12)),
             padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         ),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(

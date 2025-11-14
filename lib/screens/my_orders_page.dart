@@ -26,7 +26,8 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
     try {
       final response = await supabase
           .from('pedidos')
-          .select('*, itens_pedido(*, produtos_loja(nome), anuncios_usuarios(titulo))')
+          .select(
+              '*, itens_pedido(*, produtos_loja(nome), anuncios_usuarios(titulo))')
           .eq('usuario_id', userId)
           .order('created_at', ascending: false);
       return response;
@@ -49,7 +50,8 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
             return Center(child: Text('Erro: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Você ainda não fez nenhum pedido.'));
+            return const Center(
+                child: Text('Você ainda não fez nenhum pedido.'));
           }
 
           final orders = snapshot.data!;
@@ -70,14 +72,18 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Pedido #${order['id']}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text('Pedido #${order['id']}',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
                           Text('Total: R\$ ${order['valor_total']}'),
                         ],
                       ),
                       const Divider(),
                       // Lista os itens de cada pedido
                       ...items.map((item) {
-                        final productName = item['produtos_loja']?['nome'] ?? item['anuncios_usuarios']?['titulo'] ?? 'Item desconhecido';
+                        final productName = item['produtos_loja']?['nome'] ??
+                            item['anuncios_usuarios']?['titulo'] ??
+                            'Item desconhecido';
                         return ListTile(
                           title: Text(productName),
                           subtitle: Text('Qtd: ${item['quantidade']}'),

@@ -2,7 +2,8 @@ import 'dart:math';
 
 class ShippingService {
   // Simula um cálculo de frete baseado no CEP e peso total
-  static Future<double> calculateShipping(String zipCode, double totalWeight) async {
+  static Future<double> calculateShipping(
+      String zipCode, double totalWeight) async {
     // Simula uma chamada à API dos Correios
     await Future.delayed(const Duration(milliseconds: 800));
 
@@ -17,7 +18,8 @@ class ShippingService {
     final region = int.parse(cleanZip.substring(0, 1));
     final baseRate = 15.0; // Taxa base do frete
     final weightRate = totalWeight * 0.5; // R$ 0,50 por kg
-    final regionMultiplier = 1.0 + (region / 10.0); // Regiões diferentes têm custos diferentes
+    final regionMultiplier =
+        1.0 + (region / 10.0); // Regiões diferentes têm custos diferentes
 
     // Adiciona uma pequena variação aleatória para simular diferentes transportadoras
     final variation = Random().nextDouble() * 5;

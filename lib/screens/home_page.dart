@@ -42,7 +42,8 @@ class _HomePageState extends State<HomePage> {
           children: [
             Image.asset('assets/logo.png', height: 30),
             const SizedBox(width: 8),
-            Text('LanternFox', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+            Text('LanternFox',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
           ],
         ),
         centerTitle: true,

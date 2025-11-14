@@ -29,19 +29,17 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<Map<String, dynamic>> _fetchProfile(String userId) async {
     try {
-      final response = await supabase
-          .from('profiles')
-          .select()
-          .eq('id', userId)
-          .single();
+      final response =
+          await supabase.from('profiles').select().eq('id', userId).single();
       return response;
     } catch (e) {
       throw 'Falha ao carregar perfil: $e';
     }
   }
 
-void _showEditProfileForm(Map<String, dynamic> currentProfile) {
-    final nameController = TextEditingController(text: currentProfile['full_name']);
+  void _showEditProfileForm(Map<String, dynamic> currentProfile) {
+    final nameController =
+        TextEditingController(text: currentProfile['full_name']);
     final formKey = GlobalKey<FormState>();
     File? selectedImage; // Variável para guardar a imagem selecionada
 
@@ -79,15 +77,19 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    Text('Editar Perfil', style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+                    Text('Editar Perfil',
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.center),
                     const SizedBox(height: 20),
                     TextFormField(
                       controller: nameController,
-                      decoration: const InputDecoration(labelText: 'Nome Completo'),
-                      validator: (value) => value!.isEmpty ? 'O nome não pode ser vazio.' : null,
+                      decoration:
+                          const InputDecoration(labelText: 'Nome Completo'),
+                      validator: (value) =>
+                          value!.isEmpty ? 'O nome não pode ser vazio.' : null,
                     ),
                     const SizedBox(height: 20),
-                    
+
                     OutlinedButton.icon(
                       icon: const Icon(Icons.image_search),
                       label: const Text('Selecionar Novo Avatar'),
@@ -95,7 +97,8 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                         final picker = ImagePicker();
                         final XFile? imageFile = await picker.pickImage(
                           source: ImageSource.gallery,
-                          imageQuality: 50, // Comprime a imagem para uploads mais rápidos
+                          imageQuality:
+                              50, // Comprime a imagem para uploads mais rápidos
                         );
                         if (imageFile != null) {
                           setModalState(() {
@@ -104,13 +107,14 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                         }
                       },
                     ),
-                    
+
                     if (selectedImage != null)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.file(selectedImage!, height: 100, fit: BoxFit.contain),
+                          child: Image.file(selectedImage!,
+                              height: 100, fit: BoxFit.contain),
                         ),
                       ),
 
@@ -127,13 +131,16 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                         showDialog(
                           context: context,
                           barrierDismissible: false,
-                          builder: (context) => const Center(child: CircularProgressIndicator()),
+                          builder: (context) =>
+                              const Center(child: CircularProgressIndicator()),
                         );
 
                         if (!mounted) return;
                         if (_userIdNullable == null) {
                           scaffoldMessenger.showSnackBar(
-                            const SnackBar(content: Text('Erro: Usuário não autenticado'), backgroundColor: Colors.red),
+                            const SnackBar(
+                                content: Text('Erro: Usuário não autenticado'),
+                                backgroundColor: Colors.red),
                           );
                           return;
                         }
@@ -143,15 +150,18 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                           if (selectedImage != null) {
                             final fileExt = selectedImage!.path.split('.').last;
                             final filePath = '$_userIdNullable/avatar.$fileExt';
-                            
+
                             await supabase.storage.from('avatares').upload(
                                   filePath,
                                   selectedImage!,
                                   fileOptions: const FileOptions(upsert: true),
                                 );
-                            
-                            imageUrl = supabase.storage.from('avatares').getPublicUrl(filePath);
-                            imageUrl = '$imageUrl?t=${DateTime.now().millisecondsSinceEpoch}';
+
+                            imageUrl = supabase.storage
+                                .from('avatares')
+                                .getPublicUrl(filePath);
+                            imageUrl =
+                                '$imageUrl?t=${DateTime.now().millisecondsSinceEpoch}';
                           }
 
                           final updates = {
@@ -159,15 +169,22 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                             if (imageUrl != null) 'avatar_url': imageUrl,
                           };
 
-                          await supabase.from('profiles').update(updates).eq('id', _userIdNullable!);
+                          await supabase
+                              .from('profiles')
+                              .update(updates)
+                              .eq('id', _userIdNullable!);
 
                           if (mounted) {
                             navigator.pop(); // Fecha o indicador de loading
                             navigator.pop(); // Fecha o modal
-                            setState(() { _profileFuture = _fetchProfile(_userIdNullable!); });
+                            setState(() {
+                              _profileFuture = _fetchProfile(_userIdNullable!);
+                            });
                             if (mounted) {
                               scaffoldMessenger.showSnackBar(
-                                const SnackBar(content: Text('Perfil atualizado!'), backgroundColor: Colors.green),
+                                const SnackBar(
+                                    content: Text('Perfil atualizado!'),
+                                    backgroundColor: Colors.green),
                               );
                             }
                           }
@@ -176,7 +193,9 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                             navigator.pop(); // Fecha o indicador de loading
                             if (mounted) {
                               scaffoldMessenger.showSnackBar(
-                                SnackBar(content: Text('Erro ao atualizar: $e'), backgroundColor: Colors.red),
+                                SnackBar(
+                                    content: Text('Erro ao atualizar: $e'),
+                                    backgroundColor: Colors.red),
                               );
                             }
                           }
@@ -194,7 +213,7 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
       },
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -224,11 +243,14 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                         CircleAvatar(
                           radius: 60,
                           backgroundColor: Colors.grey.shade800,
-                          backgroundImage: (profile['avatar_url'] != null && profile['avatar_url'].isNotEmpty)
+                          backgroundImage: (profile['avatar_url'] != null &&
+                                  profile['avatar_url'].isNotEmpty)
                               ? NetworkImage(profile['avatar_url'])
                               : null,
-                          child: (profile['avatar_url'] == null || profile['avatar_url'].isEmpty)
-                              ? const Icon(Icons.person, size: 60, color: Colors.grey)
+                          child: (profile['avatar_url'] == null ||
+                                  profile['avatar_url'].isEmpty)
+                              ? const Icon(Icons.person,
+                                  size: 60, color: Colors.grey)
                               : null,
                         ),
                         Positioned(
@@ -236,10 +258,12 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                           right: MediaQuery.of(context).size.width / 2 - 80,
                           child: CircleAvatar(
                             radius: 20,
-                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
                             child: IconButton(
                               tooltip: 'Editar perfil',
-                              icon: const Icon(Icons.edit, color: Colors.black, size: 20),
+                              icon: const Icon(Icons.edit,
+                                  color: Colors.black, size: 20),
                               onPressed: () => _showEditProfileForm(profile),
                             ),
                           ),
@@ -255,7 +279,10 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                     const SizedBox(height: 8),
                     Text(
                       user?.email ?? 'Email não encontrado',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(color: Colors.grey),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 40),
@@ -263,7 +290,10 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                       icon: const Icon(Icons.receipt_long_outlined),
                       label: const Text('Meus Pedidos'),
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const MyOrdersPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MyOrdersPage()));
                       },
                     ),
                     const SizedBox(height: 12),
@@ -271,7 +301,10 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                       icon: const Icon(Icons.campaign_outlined),
                       label: const Text('Meus Anúncios'),
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const MyAdsPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MyAdsPage()));
                       },
                     ),
                     const SizedBox(height: 40),
@@ -286,7 +319,8 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
               ),
             );
           }
-          return const Center(child: Text('Não foi possível carregar o perfil.'));
+          return const Center(
+              child: Text('Não foi possível carregar o perfil.'));
         },
       ),
     );

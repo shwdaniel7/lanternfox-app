@@ -47,7 +47,8 @@ class _AuthPageState extends State<AuthPage> {
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registro realizado! Verifique seu e-mail.')),
+          const SnackBar(
+              content: Text('Registro realizado! Verifique seu e-mail.')),
         );
         setState(() => _isLogin = true);
       }
@@ -109,8 +110,10 @@ class _AuthPageState extends State<AuthPage> {
                 if (!_isLogin) ...[
                   TextFormField(
                     controller: _nameController,
-                    decoration: const InputDecoration(labelText: 'Nome Completo'),
-                    validator: (value) => value!.isEmpty ? 'Por favor, insira seu nome' : null,
+                    decoration:
+                        const InputDecoration(labelText: 'Nome Completo'),
+                    validator: (value) =>
+                        value!.isEmpty ? 'Por favor, insira seu nome' : null,
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -118,14 +121,18 @@ class _AuthPageState extends State<AuthPage> {
                   controller: _emailController,
                   decoration: const InputDecoration(labelText: 'E-mail'),
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) => (value == null || !value.contains('@')) ? 'Por favor, insira um e-mail válido' : null,
+                  validator: (value) => (value == null || !value.contains('@'))
+                      ? 'Por favor, insira um e-mail válido'
+                      : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
                   decoration: const InputDecoration(labelText: 'Senha'),
                   obscureText: true,
-                  validator: (value) => (value == null || value.length < 6) ? 'A senha deve ter pelo menos 6 caracteres' : null,
+                  validator: (value) => (value == null || value.length < 6)
+                      ? 'A senha deve ter pelo menos 6 caracteres'
+                      : null,
                 ),
                 const SizedBox(height: 24),
                 if (_isLoading)
@@ -138,7 +145,9 @@ class _AuthPageState extends State<AuthPage> {
                   const SizedBox(height: 12),
                   TextButton(
                     onPressed: () => setState(() => _isLogin = !_isLogin),
-                    child: Text(_isLogin ? 'Não tem uma conta? Registre-se' : 'Já tem uma conta? Faça o login'),
+                    child: Text(_isLogin
+                        ? 'Não tem uma conta? Registre-se'
+                        : 'Já tem uma conta? Faça o login'),
                   ),
                   const SizedBox(height: 12),
                   const Row(
@@ -153,7 +162,8 @@ class _AuthPageState extends State<AuthPage> {
                   ),
                   const SizedBox(height: 12),
                   ElevatedButton.icon(
-                    icon: const Icon(Icons.login), // Ícone genérico, pode ser trocado por uma imagem do Google
+                    icon: const Icon(Icons
+                        .login), // Ícone genérico, pode ser trocado por uma imagem do Google
                     label: const Text('Entrar com Google'),
                     onPressed: _signInWithGoogle,
                     style: ElevatedButton.styleFrom(

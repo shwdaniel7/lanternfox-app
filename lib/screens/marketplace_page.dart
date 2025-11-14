@@ -56,7 +56,8 @@ class _MarketplacePageState extends State<MarketplacePage> {
               itemBuilder: (context, index) {
                 final ad = ads[index];
                 return ProductCard(
-                  imageUrl: ad['imagem_url'] ?? 'https://via.placeholder.com/400',
+                  imageUrl:
+                      ad['imagem_url'] ?? 'https://via.placeholder.com/400',
                   name: ad['titulo'],
                   price: (ad['preco_sugerido'] as num?)?.toDouble() ?? 0.0,
                   onTap: () {

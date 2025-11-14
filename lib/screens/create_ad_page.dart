@@ -22,7 +22,9 @@ class _CreateAdPageState extends State<CreateAdPage> {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedImage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, selecione uma imagem.'), backgroundColor: Colors.red),
+        const SnackBar(
+            content: Text('Por favor, selecione uma imagem.'),
+            backgroundColor: Colors.red),
       );
       return;
     }
@@ -36,8 +38,11 @@ class _CreateAdPageState extends State<CreateAdPage> {
       final filePath = fileName;
 
       // 1. Upload da imagem
-      await supabase.storage.from('imagens_anuncios').upload(filePath, _selectedImage!);
-      final imageUrl = supabase.storage.from('imagens_anuncios').getPublicUrl(filePath);
+      await supabase.storage
+          .from('imagens_anuncios')
+          .upload(filePath, _selectedImage!);
+      final imageUrl =
+          supabase.storage.from('imagens_anuncios').getPublicUrl(filePath);
 
       // 2. Inserção dos dados na tabela
       await supabase.from('anuncios_usuarios').insert({
@@ -50,14 +55,19 @@ class _CreateAdPageState extends State<CreateAdPage> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Anúncio criado com sucesso!'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Anúncio criado com sucesso!'),
+              backgroundColor: Colors.green),
         );
-        Navigator.of(context).pop(true); // Volta para a tela anterior e envia 'true'
+        Navigator.of(context)
+            .pop(true); // Volta para a tela anterior e envia 'true'
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao criar anúncio: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Erro ao criar anúncio: $e'),
+              backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -86,8 +96,10 @@ class _CreateAdPageState extends State<CreateAdPage> {
             children: [
               TextFormField(
                 controller: _titleController,
-                decoration: const InputDecoration(labelText: 'Título do Anúncio'),
-                validator: (value) => value!.isEmpty ? 'O título é obrigatório.' : null,
+                decoration:
+                    const InputDecoration(labelText: 'Título do Anúncio'),
+                validator: (value) =>
+                    value!.isEmpty ? 'O título é obrigatório.' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -98,9 +110,11 @@ class _CreateAdPageState extends State<CreateAdPage> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _priceController,
-                decoration: const InputDecoration(labelText: 'Preço Sugerido (R\$)'),
+                decoration:
+                    const InputDecoration(labelText: 'Preço Sugerido (R\$)'),
                 keyboardType: TextInputType.number,
-                validator: (value) => value!.isEmpty ? 'O preço é obrigatório.' : null,
+                validator: (value) =>
+                    value!.isEmpty ? 'O preço é obrigatório.' : null,
               ),
               const SizedBox(height: 24),
               OutlinedButton.icon(
@@ -108,7 +122,8 @@ class _CreateAdPageState extends State<CreateAdPage> {
                 label: const Text('Selecionar Imagem'),
                 onPressed: () async {
                   final picker = ImagePicker();
-                  final image = await picker.pickImage(source: ImageSource.gallery);
+                  final image =
+                      await picker.pickImage(source: ImageSource.gallery);
                   if (image != null) {
                     setState(() {
                       _selectedImage = File(image.path);
@@ -119,7 +134,8 @@ class _CreateAdPageState extends State<CreateAdPage> {
               if (_selectedImage != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0),
-                  child: Image.file(_selectedImage!, height: 150, fit: BoxFit.contain),
+                  child: Image.file(_selectedImage!,
+                      height: 150, fit: BoxFit.contain),
                 ),
               const SizedBox(height: 24),
               if (_isLoading)

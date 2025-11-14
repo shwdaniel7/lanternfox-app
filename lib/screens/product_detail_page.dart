@@ -52,7 +52,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('A troca não está disponível para produtos em promoção.'),
+              content: Text(
+                  'A troca não está disponível para produtos em promoção.'),
               backgroundColor: Colors.orange),
         );
       }
@@ -85,7 +86,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   return const Center(
                     child: Padding(
                       padding: EdgeInsets.all(24.0),
-                      child: Text('Você não tem nenhum anúncio disponível para troca.'),
+                      child: Text(
+                          'Você não tem nenhum anúncio disponível para troca.'),
                     ),
                   );
                 }
@@ -108,9 +110,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         itemBuilder: (context, index) {
                           final ad = myAds[index];
                           return ListTile(
-                            leading: Image.network(ad['imagem_url'] ?? 'https://via.placeholder.com/100'),
+                            leading: Image.network(ad['imagem_url'] ??
+                                'https://via.placeholder.com/100'),
                             title: Text(ad['titulo']),
-                            subtitle: Text('Valor: R\$ ${ad['preco_sugerido']}'),
+                            subtitle:
+                                Text('Valor: R\$ ${ad['preco_sugerido']}'),
                             onTap: () {
                               // Navega para a página de confirmação
                               Navigator.pop(context); // Fecha o modal
@@ -141,130 +145,144 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Detalhes do Produto')),
-      body: SafeArea(
-        child: FutureBuilder<Map<String, dynamic>>(
-          future: _productFuture,
-          builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Erro: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: Text('Produto não encontrado.'));
-          }
+        appBar: AppBar(title: const Text('Detalhes do Produto')),
+        body: SafeArea(
+          child: FutureBuilder<Map<String, dynamic>>(
+            future: _productFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Erro: ${snapshot.error}'));
+              }
+              if (!snapshot.hasData) {
+                return const Center(child: Text('Produto não encontrado.'));
+              }
 
-          final product = snapshot.data!;
-          final isPromo = product['em_promocao'] == true;
+              final product = snapshot.data!;
+              final isPromo = product['em_promocao'] == true;
 
-          return SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.network(
-                  product['imagem_url'] ?? 'https://via.placeholder.com/400',
-                  width: double.infinity,
-                  height: 300,
-                  fit: BoxFit.cover,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product['nome'],
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 16),
-                      
-                      if (isPromo) ...[
-                        Text(
-                          'R\$ ${product['preco']}',
-                          style: const TextStyle(
-                            decoration: TextDecoration.lineThrough,
-                            color: Colors.grey,
-                            fontSize: 16,
+              return SingleChildScrollView(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).padding.bottom + 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.network(
+                      product['imagem_url'] ??
+                          'https://via.placeholder.com/400',
+                      width: double.infinity,
+                      height: 300,
+                      fit: BoxFit.cover,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product['nome'],
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        Text(
-                          'R\$ ${product['preco_promocional']}',
-                          style: const TextStyle(
-                            color: Colors.green,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ] else ...[
-                        Text(
-                          'R\$ ${product['preco']}',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                          const SizedBox(height: 16),
 
-                      const SizedBox(height: 16),
-                      Text(
-                        'Em estoque: ${product['estoque']} unidades',
-                        style: const TextStyle(color: Colors.green),
-                      ),
-                      const SizedBox(height: 24),
-                      const Text(
-                        'Sobre o produto',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      const Divider(),
-                      Text(product['descricao'] ?? 'Sem descrição disponível.'),
-                      const SizedBox(height: 32),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                                onPressed: () {
-                                  // Acessa o CartManager e chama o método addItem
-                                  Provider.of<CartManager>(context, listen: false).addItem(product);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('${product['nome']} adicionado ao carrinho!'),
-                                      backgroundColor: Colors.green,
-                                    ),
-                                  );
-                                },
-                                child: const Text('Adicionar ao Carrinho'),
+                          if (isPromo) ...[
+                            Text(
+                              'R\$ ${product['preco']}',
+                              style: const TextStyle(
+                                decoration: TextDecoration.lineThrough,
+                                color: Colors.grey,
+                                fontSize: 16,
                               ),
-                      ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () => _showTradeInModal(product),
-                          style: isPromo ? OutlinedButton.styleFrom(foregroundColor: Colors.grey) : null,
-                          child: const Text('Dar item como entrada'),
-                        ),
-                      ),
-                      if (isPromo)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            'Esta opção não está disponível para produtos em promoção.',
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                            Text(
+                              'R\$ ${product['preco_promocional']}',
+                              style: const TextStyle(
+                                color: Colors.green,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ] else ...[
+                            Text(
+                              'R\$ ${product['preco']}',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+
+                          const SizedBox(height: 16),
+                          Text(
+                            'Em estoque: ${product['estoque']} unidades',
+                            style: const TextStyle(color: Colors.green),
                           ),
+                          const SizedBox(height: 24),
+                          const Text(
+                            'Sobre o produto',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          const Divider(),
+                          Text(product['descricao'] ??
+                              'Sem descrição disponível.'),
+                          const SizedBox(height: 32),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Acessa o CartManager e chama o método addItem
+                                Provider.of<CartManager>(context, listen: false)
+                                    .addItem(product);
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        '${product['nome']} adicionado ao carrinho!'),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                              },
+                              child: const Text('Adicionar ao Carrinho'),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton(
+                              onPressed: () => _showTradeInModal(product),
+                              style: isPromo
+                                  ? OutlinedButton.styleFrom(
+                                      foregroundColor: Colors.grey)
+                                  : null,
+                              child: const Text('Dar item como entrada'),
+                            ),
+                          ),
+                          if (isPromo)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                'Esta opção não está disponível para produtos em promoção.',
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 12),
+                              ),
+                            ),
+                          const SizedBox(
+                              height: 32), // Add extra padding at the bottom
+                        ],
                       ),
-                      const SizedBox(height: 32), // Add extra padding at the bottom
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        },
-      ),
-    ));
+              );
+            },
+          ),
+        ));
   }
 }

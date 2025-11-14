@@ -33,13 +33,15 @@ class CartManager extends ChangeNotifier {
 
   int get totalItems => _items.fold(0, (sum, item) => sum + item.quantity);
 
-  double get subtotal => _items.fold(0.0, (sum, item) => sum + (item.price * item.quantity));
-  
+  double get subtotal =>
+      _items.fold(0.0, (sum, item) => sum + (item.price * item.quantity));
+
   double get totalPrice => subtotal + (_shippingCost ?? 0.0);
 
   void addItem(Map<String, dynamic> productData, {String type = 'loja'}) {
     final uniqueId = '$type-${productData['id']}';
-    final existingIndex = _items.indexWhere((item) => item.uniqueId == uniqueId);
+    final existingIndex =
+        _items.indexWhere((item) => item.uniqueId == uniqueId);
 
     if (existingIndex >= 0) {
       _items[existingIndex].quantity++;
@@ -48,9 +50,11 @@ class CartManager extends ChangeNotifier {
         uniqueId: uniqueId,
         id: productData['id'],
         name: productData['nome'] ?? productData['titulo'],
-        price: (productData['preco'] ?? productData['preco_sugerido'] as num).toDouble(),
+        price: (productData['preco'] ?? productData['preco_sugerido'] as num)
+            .toDouble(),
         type: type,
-        weight: (productData['peso'] as num?)?.toDouble() ?? 0.5, // Usa peso do produto se disponível, senão usa 500g
+        weight: (productData['peso'] as num?)?.toDouble() ??
+            0.5, // Usa peso do produto se disponível, senão usa 500g
       ));
     }
     // Notifica os 'ouvintes' (widgets) que o estado mudou
@@ -67,12 +71,12 @@ class CartManager extends ChangeNotifier {
     notifyListeners();
   }
 
-    void setShippingCost(double cost) {
-      _shippingCost = cost;
-      notifyListeners();
-    }
+  void setShippingCost(double cost) {
+    _shippingCost = cost;
+    notifyListeners();
+  }
 
-    Future<void> checkout() async {
+  Future<void> checkout() async {
     final userId = supabase.auth.currentUser?.id;
     if (userId == null) {
       throw 'Usuário não está logado.';
@@ -93,17 +97,19 @@ class CartManager extends ChangeNotifier {
         .insert({'usuario_id': userId, 'valor_total': total})
         .select('id')
         .single();
-    
+
     final pedidoId = pedidoResponse['id'];
 
     // 3. Prepara a lista de itens para inserir
-    final itensParaInserir = _items.map((item) => {
-      'pedido_id': pedidoId,
-      'produto_loja_id': item.type == 'loja' ? item.id : null,
-      'anuncio_usuario_id': item.type == 'marketplace' ? item.id : null,
-      'quantidade': item.quantity,
-      'preco_unitario': item.price,
-    }).toList();
+    final itensParaInserir = _items
+        .map((item) => {
+              'pedido_id': pedidoId,
+              'produto_loja_id': item.type == 'loja' ? item.id : null,
+              'anuncio_usuario_id': item.type == 'marketplace' ? item.id : null,
+              'quantidade': item.quantity,
+              'preco_unitario': item.price,
+            })
+        .toList();
 
     // 4. Insere todos os itens na tabela 'itens_pedido'
     await supabase.from('itens_pedido').insert(itensParaInserir);
@@ -111,13 +117,13 @@ class CartManager extends ChangeNotifier {
     // 5. Atualiza o valor do frete no pedido
     await supabase
         .from('pedidos')
-        .update({'valor_frete': _shippingCost})
-        .eq('id', pedidoId);
+        .update({'valor_frete': _shippingCost}).eq('id', pedidoId);
 
     // 6. Limpa o carrinho local
     clearCart();
     _shippingCost = null;
   }
+
   void updateQuantity(String uniqueId, int newQuantity) {
     final index = _items.indexWhere((item) => item.uniqueId == uniqueId);
     if (index != -1) {
@@ -131,4 +137,3 @@ class CartManager extends ChangeNotifier {
     }
   }
 }
-

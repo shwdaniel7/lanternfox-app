@@ -28,7 +28,8 @@ class _CartPageState extends State<CartPage> {
                       context: context,
                       builder: (ctx) => AlertDialog(
                         title: const Text('Limpar Carrinho'),
-                        content: const Text('Tem certeza que deseja remover todos os itens?'),
+                        content: const Text(
+                            'Tem certeza que deseja remover todos os itens?'),
                         actions: [
                           TextButton(
                             child: const Text('Cancelar'),
@@ -37,7 +38,8 @@ class _CartPageState extends State<CartPage> {
                           TextButton(
                             child: const Text('Sim'),
                             onPressed: () {
-                              Provider.of<CartManager>(context, listen: false).clearCart();
+                              Provider.of<CartManager>(context, listen: false)
+                                  .clearCart();
                               Navigator.of(ctx).pop();
                             },
                           ),
@@ -68,7 +70,8 @@ class _CartPageState extends State<CartPage> {
                                   icon: const Icon(Icons.remove_circle_outline),
                                   onPressed: () {
                                     // Agora esta função existe
-                                    cart.updateQuantity(item.uniqueId, item.quantity - 1);
+                                    cart.updateQuantity(
+                                        item.uniqueId, item.quantity - 1);
                                   },
                                 ),
                                 Text(item.quantity.toString()),
@@ -77,7 +80,8 @@ class _CartPageState extends State<CartPage> {
                                   icon: const Icon(Icons.add_circle_outline),
                                   onPressed: () {
                                     // E esta também
-                                    cart.updateQuantity(item.uniqueId, item.quantity + 1);
+                                    cart.updateQuantity(
+                                        item.uniqueId, item.quantity + 1);
                                   },
                                 ),
                               ],
@@ -96,19 +100,22 @@ class _CartPageState extends State<CartPage> {
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 16),
-                      ElevatedButton(
-                        // A MUDANÇA ESTÁ AQUI
-                        onPressed: (cart.items.isEmpty)
-                            ? null
-                            : () {
-                                // Navega para a página de checkout
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const CheckoutPage()),
-                                );
-                              },
-                                child: const Text('Ir para o Checkout'), // Texto do botão atualizado
-                      ),
+                          ElevatedButton(
+                            // A MUDANÇA ESTÁ AQUI
+                            onPressed: (cart.items.isEmpty)
+                                ? null
+                                : () {
+                                    // Navega para a página de checkout
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const CheckoutPage()),
+                                    );
+                                  },
+                            child: const Text(
+                                'Ir para o Checkout'), // Texto do botão atualizado
+                          ),
                         ],
                       ),
                     ),

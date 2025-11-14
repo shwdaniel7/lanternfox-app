@@ -35,8 +35,7 @@ class _TradeConfirmationPageState extends State<TradeConfirmationPage> {
       // 2. Atualiza o status do anúncio do usuário para 'em_troca' ou 'trocado'
       await supabase
           .from('anuncios_usuarios')
-          .update({'status': 'trocado'})
-          .eq('id', widget.userAd['id']);
+          .update({'status': 'trocado'}).eq('id', widget.userAd['id']);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -64,7 +63,8 @@ class _TradeConfirmationPageState extends State<TradeConfirmationPage> {
 
   @override
   Widget build(BuildContext context) {
-    final finalPrice = (widget.storeProduct['preco'] as num) - (widget.userAd['preco_sugerido'] as num);
+    final finalPrice = (widget.storeProduct['preco'] as num) -
+        (widget.userAd['preco_sugerido'] as num);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Confirmar Troca')),
@@ -102,7 +102,8 @@ class _TradeConfirmationPageState extends State<TradeConfirmationPage> {
             else
               ElevatedButton(
                 onPressed: _confirmTrade,
-                style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(16)),
+                style:
+                    ElevatedButton.styleFrom(padding: const EdgeInsets.all(16)),
                 child: const Text('Confirmar Proposta'),
               ),
           ],
@@ -112,7 +113,8 @@ class _TradeConfirmationPageState extends State<TradeConfirmationPage> {
   }
 
   // Widget auxiliar para criar os cards de item
-  Widget _buildItemCard({required String? imageUrl, required String title, required num price}) {
+  Widget _buildItemCard(
+      {required String? imageUrl, required String title, required num price}) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -129,7 +131,8 @@ class _TradeConfirmationPageState extends State<TradeConfirmationPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(title,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                   Text('Valor: R\$ ${price.toStringAsFixed(2)}'),
                 ],
               ),

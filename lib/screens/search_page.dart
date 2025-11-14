@@ -28,7 +28,7 @@ class _SearchPageState extends State<SearchPage> {
     }
     if (widget.initialCategory != null) {
       // Quando é uma busca por categoria, não usamos o texto da categoria como termo de busca
-      _searchController.text = ''; 
+      _searchController.text = '';
       _performSearch('');
     }
   }
@@ -46,20 +46,20 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  Future<List<Map<String, dynamic>>> _fetchSearchResults(String searchTerm) async {
+  Future<List<Map<String, dynamic>>> _fetchSearchResults(
+      String searchTerm) async {
     try {
-      var productsResponse = supabase
-          .from('produtos_loja')
-          .select();
+      var productsResponse = supabase.from('produtos_loja').select();
 
       var adsResponse = supabase
           .from('anuncios_usuarios')
           .select('*, profiles(full_name)')
           .eq('status', 'disponivel');
-          
+
       // Primeiro aplica o filtro de categoria se existir
       if (widget.initialCategory != null) {
-        productsResponse = productsResponse.eq('categoria', widget.initialCategory!);
+        productsResponse =
+            productsResponse.eq('categoria', widget.initialCategory!);
         adsResponse = adsResponse.eq('categoria', widget.initialCategory!);
       }
 
@@ -74,7 +74,7 @@ class _SearchPageState extends State<SearchPage> {
       final products = (results[0] as List)
           .map((p) => Map<String, dynamic>.from(p)..['type'] = 'loja')
           .toList();
-          
+
       final ads = (results[1] as List)
           .map((a) => Map<String, dynamic>.from(a)..['type'] = 'marketplace')
           .toList();
@@ -97,7 +97,8 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         title: TextField(
           controller: _searchController,
-          autofocus: widget.initialCategory == null, // Foca automaticamente, exceto se for busca por categoria
+          autofocus: widget.initialCategory ==
+              null, // Foca automaticamente, exceto se for busca por categoria
           decoration: const InputDecoration(
             hintText: 'O que você está procurando?',
             border: InputBorder.none,
@@ -117,7 +118,8 @@ class _SearchPageState extends State<SearchPage> {
                   return Center(child: Text('Erro: ${snapshot.error}'));
                 }
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('Nenhum resultado encontrado.'));
+                  return const Center(
+                      child: Text('Nenhum resultado encontrado.'));
                 }
 
                 final results = snapshot.data!;
@@ -130,22 +132,28 @@ class _SearchPageState extends State<SearchPage> {
                     final isProduct = item['type'] == 'loja';
 
                     return ProductCard(
-                      imageUrl: item['imagem_url'] ?? 'https://via.placeholder.com/400',
+                      imageUrl: item['imagem_url'] ??
+                          'https://via.placeholder.com/400',
                       name: isProduct ? item['nome'] : item['titulo'],
-                      price: (isProduct ? item['preco'] : item['preco_sugerido'] as num).toDouble(),
+                      price: (isProduct
+                              ? item['preco']
+                              : item['preco_sugerido'] as num)
+                          .toDouble(),
                       onTap: () {
                         if (isProduct) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProductDetailPage(productId: item['id'] as int),
+                              builder: (context) => ProductDetailPage(
+                                  productId: item['id'] as int),
                             ),
                           );
                         } else {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AdDetailPage(adId: item['id'] as int),
+                              builder: (context) =>
+                                  AdDetailPage(adId: item['id'] as int),
                             ),
                           );
                         }

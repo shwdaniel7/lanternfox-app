@@ -39,7 +39,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       });
       return;
     }
-    
+
     if (!ShippingService.isValidZipCode(zipCode)) {
       setState(() {
         _shippingError = 'CEP inválido';
@@ -54,8 +54,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     try {
       final cart = Provider.of<CartManager>(context, listen: false);
-      final totalWeight = cart.items.fold(0.0, (sum, item) => sum + (item.weight * item.quantity));
-      
+      final totalWeight = cart.items
+          .fold(0.0, (sum, item) => sum + (item.weight * item.quantity));
+
       final cost = await ShippingService.calculateShipping(
         _zipController.text,
         totalWeight,
@@ -109,7 +110,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao processar pedido: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Erro ao processar pedido: $e'),
+              backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -144,7 +147,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Calcular Frete', style: Theme.of(context).textTheme.titleLarge),
+                        Text('Calcular Frete',
+                            style: Theme.of(context).textTheme.titleLarge),
                         const SizedBox(height: 16),
                         Row(
                           children: [
@@ -156,15 +160,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   hintText: '00000-000',
                                   errorText: _shippingError,
                                   border: const OutlineInputBorder(),
-                                  prefixIcon: const Icon(Icons.location_on_outlined),
+                                  prefixIcon:
+                                      const Icon(Icons.location_on_outlined),
                                   filled: true,
-                                  fillColor: Theme.of(context).colorScheme.surface,
+                                  fillColor:
+                                      Theme.of(context).colorScheme.surface,
                                 ),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                   LengthLimitingTextInputFormatter(8),
-                                  TextInputFormatter.withFunction((oldValue, newValue) {
+                                  TextInputFormatter.withFunction(
+                                      (oldValue, newValue) {
                                     // Formata o CEP como 00000-000
                                     if (newValue.text.length <= 8) {
                                       return newValue;
@@ -173,7 +180,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   }),
                                 ],
                                 onChanged: (value) {
-                                  final cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
+                                  final cleanValue =
+                                      value.replaceAll(RegExp(r'[^0-9]'), '');
                                   if (cleanValue.length == 8) {
                                     _calculateShipping();
                                   }
@@ -182,12 +190,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                             const SizedBox(width: 8),
                             ElevatedButton(
-                              onPressed: _isCalculatingShipping ? null : _calculateShipping,
+                              onPressed: _isCalculatingShipping
+                                  ? null
+                                  : _calculateShipping,
                               child: _isCalculatingShipping
                                   ? const SizedBox(
                                       width: 20,
                                       height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                      child: CircularProgressIndicator(
+                                          strokeWidth: 2),
                                     )
                                   : const Text('Calcular'),
                             ),
@@ -219,7 +230,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Resumo do Pedido', style: Theme.of(context).textTheme.titleLarge),
+                        Text('Resumo do Pedido',
+                            style: Theme.of(context).textTheme.titleLarge),
                         const Divider(height: 24),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -235,7 +247,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             const Text('Valor Total:'),
                             Text(
                               'R\$ ${cart.totalPrice.toStringAsFixed(2)}',
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                           ],
                         ),
@@ -244,7 +257,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Text('Escolha o Método de Pagamento', style: Theme.of(context).textTheme.titleLarge),
+                Text('Escolha o Método de Pagamento',
+                    style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 16),
                 // Botão de Cartão de Crédito (Simulado)
                 ElevatedButton.icon(
@@ -278,7 +292,8 @@ class OrderSuccessPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.check_circle_outline, color: Colors.green, size: 100),
+              const Icon(Icons.check_circle_outline,
+                  color: Colors.green, size: 100),
               const SizedBox(height: 24),
               Text(
                 'Pedido Realizado com Sucesso!',
