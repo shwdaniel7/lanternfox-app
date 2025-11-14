@@ -16,7 +16,7 @@ class ShippingService {
     // Simula diferentes valores de frete baseado na região do CEP
     // e no peso total dos produtos
     final region = int.parse(cleanZip.substring(0, 1));
-    final baseRate = 15.0; // Taxa base do frete
+    const baseRate = 15.0; // Taxa base do frete
     final weightRate = totalWeight * 0.5; // R$ 0,50 por kg
     final regionMultiplier =
         1.0 + (region / 10.0); // Regiões diferentes têm custos diferentes
