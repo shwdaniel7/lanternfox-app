@@ -121,12 +121,12 @@ class _StorePageState extends State<StorePage> {
     return Container(
       height: 250,
       margin: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
+        decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         image: DecorationImage(
           image: const AssetImage('assets/hero_banner.jpg'),
           fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
+          colorFilter: ColorFilter.mode(Colors.black.withValues(alpha: 0.5), BlendMode.darken),
         ),
       ),
       child: Padding(

@@ -50,7 +50,7 @@ Widget build(BuildContext context) {
                 top: 12,
                 right: 12,
                 child: CircleAvatar(
-                  backgroundColor: Colors.black.withOpacity(0.5),
+                  backgroundColor: Colors.black.withValues(alpha: 0.5),
                   child: IconButton(
                     icon: const Icon(Icons.favorite_border, color: Colors.white),
                     onPressed: () {},

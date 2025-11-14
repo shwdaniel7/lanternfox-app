@@ -11,13 +11,13 @@ class MyAdsPage extends StatefulWidget {
 
 class _MyAdsPageState extends State<MyAdsPage> {
   late Future<List<Map<String, dynamic>>> _adsFuture;
-  final String? _userId = supabase.auth.currentUser?.id;
+  final String? _userIdNullable = supabase.auth.currentUser?.id;
 
   @override
   void initState() {
     super.initState();
-    if (_userId != null) {
-      _adsFuture = _fetchMyAds(_userId);
+    if (_userIdNullable != null) {
+      _adsFuture = _fetchMyAds(_userIdNullable!);
     } else {
       _adsFuture = Future.error('Usuário não autenticado.');
     }
@@ -95,10 +95,10 @@ class _MyAdsPageState extends State<MyAdsPage> {
             MaterialPageRoute(builder: (context) => const CreateAdPage()),
           );
           
-          if (result == true && mounted && _userId != null) {
+          if (result == true && mounted && _userIdNullable != null) {
             setState(() {
               // Recarrega a lista de anúncios
-              _adsFuture = _fetchMyAds(_userId);
+              _adsFuture = _fetchMyAds(_userIdNullable!);
             });
           }
         },

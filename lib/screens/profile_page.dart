@@ -15,13 +15,13 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late Future<Map<String, dynamic>> _profileFuture;
-  final String? _userId = supabase.auth.currentUser?.id;
+  final String? _userIdNullable = supabase.auth.currentUser?.id;
 
   @override
   void initState() {
     super.initState();
-    if (_userId != null) {
-      _profileFuture = _fetchProfile(_userId);
+    if (_userIdNullable != null) {
+      _profileFuture = _fetchProfile(_userIdNullable!);
     } else {
       _profileFuture = Future.error('Usuário não autenticado.');
     }
@@ -119,6 +119,10 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                       onPressed: () async {
                         if (!formKey.currentState!.validate()) return;
 
+                        // Salva contexto antes de operações async
+                        final scaffoldMessenger = ScaffoldMessenger.of(context);
+                        final navigator = Navigator.of(context);
+
                         // Mostra um indicador de loading
                         showDialog(
                           context: context,
@@ -126,11 +130,19 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                           builder: (context) => const Center(child: CircularProgressIndicator()),
                         );
 
+                        if (!mounted) return;
+                        if (_userIdNullable == null) {
+                          scaffoldMessenger.showSnackBar(
+                            const SnackBar(content: Text('Erro: Usuário não autenticado'), backgroundColor: Colors.red),
+                          );
+                          return;
+                        }
+
                         try {
                           String? imageUrl;
                           if (selectedImage != null) {
                             final fileExt = selectedImage!.path.split('.').last;
-                            final filePath = '$_userId/avatar.$fileExt';
+                            final filePath = '$_userIdNullable/avatar.$fileExt';
                             
                             await supabase.storage.from('avatares').upload(
                                   filePath,
@@ -147,22 +159,26 @@ void _showEditProfileForm(Map<String, dynamic> currentProfile) {
                             if (imageUrl != null) 'avatar_url': imageUrl,
                           };
 
-                          await supabase.from('profiles').update(updates).eq('id', _userId!);
+                          await supabase.from('profiles').update(updates).eq('id', _userIdNullable!);
 
                           if (mounted) {
-                            Navigator.pop(context); // Fecha o indicador de loading
-                            Navigator.pop(context); // Fecha o modal
-                            setState(() { _profileFuture = _fetchProfile(_userId); });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Perfil atualizado!'), backgroundColor: Colors.green),
-                            );
+                            navigator.pop(); // Fecha o indicador de loading
+                            navigator.pop(); // Fecha o modal
+                            setState(() { _profileFuture = _fetchProfile(_userIdNullable!); });
+                            if (mounted) {
+                              scaffoldMessenger.showSnackBar(
+                                const SnackBar(content: Text('Perfil atualizado!'), backgroundColor: Colors.green),
+                              );
+                            }
                           }
                         } catch (e) {
                           if (mounted) {
-                            Navigator.pop(context); // Fecha o indicador de loading
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Erro ao atualizar: $e'), backgroundColor: Colors.red),
-                            );
+                            navigator.pop(); // Fecha o indicador de loading
+                            if (mounted) {
+                              scaffoldMessenger.showSnackBar(
+                                SnackBar(content: Text('Erro ao atualizar: $e'), backgroundColor: Colors.red),
+                              );
+                            }
                           }
                         }
                       },

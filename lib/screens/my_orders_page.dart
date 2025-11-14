@@ -10,13 +10,13 @@ class MyOrdersPage extends StatefulWidget {
 
 class _MyOrdersPageState extends State<MyOrdersPage> {
   late final Future<List<Map<String, dynamic>>> _ordersFuture;
-  final String? _userId = supabase.auth.currentUser?.id;
+  final String? _userIdNullable = supabase.auth.currentUser?.id;
 
   @override
   void initState() {
     super.initState();
-    if (_userId != null) {
-      _ordersFuture = _fetchOrders(_userId);
+    if (_userIdNullable != null) {
+      _ordersFuture = _fetchOrders(_userIdNullable!);
     } else {
       _ordersFuture = Future.error('Usuário não autenticado.');
     }
@@ -83,7 +83,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                           subtitle: Text('Qtd: ${item['quantidade']}'),
                           trailing: Text('R\$ ${item['preco_unitario']}'),
                         );
-                      }).toList(),
+                      }),
                     ],
                   ),
                 ),
