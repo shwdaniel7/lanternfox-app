@@ -60,6 +60,7 @@ class MyApp extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
+          shadowColor: const Color(0xFFf39c12).withValues(alpha: 0.1),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -70,6 +71,8 @@ class MyApp extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            elevation: 4,
+            shadowColor: const Color(0xFFf39c12).withValues(alpha: 0.3),
           ),
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
@@ -87,6 +90,7 @@ class MyApp extends StatelessWidget {
           unselectedItemColor: Colors.grey.shade600,
           type: BottomNavigationBarType.fixed,
           showUnselectedLabels: false,
+          elevation: 8,
         ),
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
@@ -99,8 +103,14 @@ class MyApp extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFFf39c12)),
+            borderSide: const BorderSide(color: Color(0xFFf39c12), width: 2),
           ),
+        ),
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          },
         ),
       ),
       home: StreamBuilder<AuthState>(

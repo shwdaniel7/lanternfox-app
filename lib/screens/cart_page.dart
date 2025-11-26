@@ -101,11 +101,9 @@ class _CartPageState extends State<CartPage> {
                           ),
                           const SizedBox(height: 16),
                           ElevatedButton(
-                            // A MUDANÇA ESTÁ AQUI
                             onPressed: (cart.items.isEmpty)
                                 ? null
                                 : () {
-                                    // Navega para a página de checkout
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -113,8 +111,7 @@ class _CartPageState extends State<CartPage> {
                                               const CheckoutPage()),
                                     );
                                   },
-                            child: const Text(
-                                'Ir para o Checkout'), // Texto do botão atualizado
+                            child: const Text('Ir para o Checkout'),
                           ),
                         ],
                       ),

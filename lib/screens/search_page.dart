@@ -27,7 +27,6 @@ class _SearchPageState extends State<SearchPage> {
       _performSearch(widget.initialSearchTerm!);
     }
     if (widget.initialCategory != null) {
-      // Quando é uma busca por categoria, não usamos o texto da categoria como termo de busca
       _searchController.text = '';
       _performSearch('');
     }
@@ -97,8 +96,7 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         title: TextField(
           controller: _searchController,
-          autofocus: widget.initialCategory ==
-              null, // Foca automaticamente, exceto se for busca por categoria
+          autofocus: widget.initialCategory == null,
           decoration: const InputDecoration(
             hintText: 'O que você está procurando?',
             border: InputBorder.none,

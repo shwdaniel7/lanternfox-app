@@ -134,42 +134,90 @@ class _StorePageState extends State<StorePage> {
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        image: DecorationImage(
-          image: const AssetImage('assets/hero_banner.jpg'),
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-              Colors.black.withValues(alpha: 0.5), BlendMode.darken),
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFf39c12).withValues(alpha: 0.2),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Stack(
           children: [
-            Text(
-              'BEM-VINDO A LanternFox',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'O melhor lugar para comprar, vender e trocar seu hardware.',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(color: Colors.white70),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: onButtonPressed,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
+            // Imagem de fundo
+            Positioned.fill(
+              child: Image.asset(
+                'assets/hero_banner.jpg',
+                fit: BoxFit.cover,
               ),
-              child: const Text('Ver Produtos'),
+            ),
+            // Gradiente overlay premium
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      const Color(0xFFf39c12).withValues(alpha: 0.4),
+                      Colors.black.withValues(alpha: 0.7),
+                      Colors.black.withValues(alpha: 0.9),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
+                ),
+              ),
+            ),
+            // Conteúdo
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ShaderMask(
+                    shaderCallback: (bounds) => const LinearGradient(
+                      colors: [
+                        Color(0xFFf39c12),
+                        Color(0xFFe67e22),
+                      ],
+                    ).createShader(bounds),
+                    child: Text(
+                      'BEM-VINDO A LanternFox',
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'O melhor lugar para comprar, vender e trocar seu hardware.',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(color: Colors.white.withValues(alpha: 0.9)),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: onButtonPressed,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        elevation: 8,
+                        shadowColor:
+                            const Color(0xFFf39c12).withValues(alpha: 0.5),
+                      ),
+                      child: const Text('Ver Produtos'),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -219,33 +267,10 @@ class _StorePageState extends State<StorePage> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemBuilder: (context, index) {
           final dept = departments[index];
-          return Container(
-            width: 100,
-            margin: const EdgeInsets.only(right: 10),
-            child: Card(
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          SearchPage(initialCategory: dept['name'] as String),
-                    ),
-                  );
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(dept['icon'] as IconData,
-                        color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(height: 8),
-                    Text(dept['label'] as String,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 12)),
-                  ],
-                ),
-              ),
-            ),
+          return _DepartmentCard(
+            name: dept['name'] as String,
+            icon: dept['icon'] as IconData,
+            label: dept['label'] as String,
           );
         },
       ),
@@ -281,6 +306,133 @@ class _StorePageState extends State<StorePage> {
       context,
       MaterialPageRoute(
           builder: (context) => ProductDetailPage(productId: productId)),
+    );
+  }
+}
+
+/// Widget de card de departamento com animação de hover
+class _DepartmentCard extends StatefulWidget {
+  final String name;
+  final IconData icon;
+  final String label;
+
+  const _DepartmentCard({
+    required this.name,
+    required this.icon,
+    required this.label,
+  });
+
+  @override
+  State<_DepartmentCard> createState() => _DepartmentCardState();
+}
+
+class _DepartmentCardState extends State<_DepartmentCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  bool _isHovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) {
+        setState(() => _isHovered = true);
+        _controller.forward();
+      },
+      onTapUp: (_) {
+        setState(() => _isHovered = false);
+        _controller.reverse();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SearchPage(initialCategory: widget.name),
+          ),
+        );
+      },
+      onTapCancel: () {
+        setState(() => _isHovered = false);
+        _controller.reverse();
+      },
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Container(
+              width: 100,
+              margin: const EdgeInsets.only(right: 10),
+              child: Card(
+                elevation: _isHovered ? 8 : 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(
+                    color: _isHovered
+                        ? const Color(0xFFf39c12).withValues(alpha: 0.5)
+                        : Colors.transparent,
+                    width: 2,
+                  ),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    gradient: _isHovered
+                        ? LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              const Color(0xFFf39c12).withValues(alpha: 0.1),
+                              Colors.transparent,
+                            ],
+                          )
+                        : null,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        widget.icon,
+                        color: _isHovered
+                            ? const Color(0xFFf39c12)
+                            : Theme.of(context).colorScheme.primary,
+                        size: 32,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        widget.label,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight:
+                              _isHovered ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

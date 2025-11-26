@@ -69,7 +69,6 @@ class _AuthPageState extends State<AuthPage> {
     try {
       await supabase.auth.signInWithOAuth(
         OAuthProvider.google,
-        // USA A SUA URL DE CALLBACK CORRETA
         redirectTo: 'com.example.app://login-callback/',
       );
     } on AuthException catch (e) {
@@ -78,10 +77,7 @@ class _AuthPageState extends State<AuthPage> {
           SnackBar(content: Text(e.message), backgroundColor: Colors.red),
         );
       }
-    } finally {
-      // O estado de loading pode não ser resetado aqui, pois o app pode ir para o background
-      // O StreamBuilder no main.dart cuidará da navegação
-    }
+    } finally {}
   }
 
   @override
@@ -162,8 +158,7 @@ class _AuthPageState extends State<AuthPage> {
                   ),
                   const SizedBox(height: 12),
                   ElevatedButton.icon(
-                    icon: const Icon(Icons
-                        .login), // Ícone genérico, pode ser trocado por uma imagem do Google
+                    icon: const Icon(Icons.login),
                     label: const Text('Entrar com Google'),
                     onPressed: _signInWithGoogle,
                     style: ElevatedButton.styleFrom(
